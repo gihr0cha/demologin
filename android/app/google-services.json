@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "295314135611",
+    "project_id": "fir-6a5e9",
+    "storage_bucket": "fir-6a5e9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:295314135611:android:b90cfd17042c78317e9a1e",
+        "android_client_info": {
+          "package_name": "com.example.demologin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmh_v1FezXoIivWeRuM3_btgWDio3MgYQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
