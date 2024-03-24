@@ -11,6 +11,7 @@ class RegisterFisio extends StatefulWidget {
 
 class _RegisterFisioState extends State<RegisterFisio> {
   final formKey = GlobalKey<FormState>();
+  String? _nome;
   String? _email;
   String? _password;
   String? erroMessage;
@@ -29,10 +30,12 @@ class _RegisterFisioState extends State<RegisterFisio> {
 void validateAndSubmit() async{
   if (validateAndSave()){
   try {
-  await FirebaseAuth.instance.createUserWithEmailAndPassword(
-    email: _email!,
-    password: _password!,
+  UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: _email!,
+      password: _password!,
   );
+  await userCredential.user!.updateDisplayName(_nome);
+  Navigator.pushNamed(context, '/home');
 } on FirebaseAuthException catch (e) { 
   if (e.code == 'weak-password') {
     erroMessage = 'A senha fornecida é muito fraca';
@@ -58,6 +61,13 @@ void validateAndSubmit() async{
         body: Form(
           key: formKey,
           child: Column(children: [
+            TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Nome',
+              ),
+              validator: (value) => value!.isEmpty ? 'Campo obrigatório' : null,
+              onSaved: (value) => _nome = value,
+            ),
             TextFormField(
               decoration: const InputDecoration(
                 labelText: 'E-mail',

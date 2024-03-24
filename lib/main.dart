@@ -3,7 +3,7 @@ import 'login_page.dart';
 import 'registerfisio_page.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
-
+import 'home_page.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   try{
@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const LoginPage(),
         '/register': (context) => const RegisterFisio(),
+        '/home': (context) => const HomePage(),
       },   
     );
   }
