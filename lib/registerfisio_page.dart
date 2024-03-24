@@ -13,6 +13,7 @@ class _RegisterFisioState extends State<RegisterFisio> {
   final formKey = GlobalKey<FormState>();
   String? _email;
   String? _password;
+  String? erroMessage;
   
 
   bool validateAndSave() {
@@ -32,12 +33,19 @@ void validateAndSubmit() async{
     email: _email!,
     password: _password!,
   );
-} on FirebaseAuthException catch (e) {
+} on FirebaseAuthException catch (e) { 
   if (e.code == 'weak-password') {
+    erroMessage = 'A senha fornecida é muito fraca';
     print('The password provided is too weak.');
   } else if (e.code == 'email-already-in-use') {
+    erroMessage = 'Esse e-mail já está em uso';
     print('The account already exists for that email.');
+  } else{
+    erroMessage = 'Erro desconhecido';
+    print('Error: $e');
   }
+  mensagem(context,erroMessage);
+  
 } catch (e) {
   print(e);
 }
@@ -46,7 +54,7 @@ void validateAndSubmit() async{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('Faça seu Login')),
+        appBar: AppBar(title: const Text('Faça seu Cadastro')),
         body: Form(
           key: formKey,
           child: Column(children: [
@@ -72,4 +80,17 @@ void validateAndSubmit() async{
           ]),
         ));
   }
+
+  void mensagem(BuildContext context, String? erroMessage){
+    final snackBar = SnackBar(
+      content: Text(erroMessage!),
+      action: SnackBarAction(
+        label: 'Fechar',
+        onPressed: (){
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        },
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  } 
 }
