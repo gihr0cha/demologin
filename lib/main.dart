@@ -10,9 +10,7 @@ void main() async{
    await Firebase.initializeApp( 
       options: DefaultFirebaseOptions.currentPlatform);
     runApp(const MyApp()); 
-  }catch(e){
-    print('Erro: $e');
-  }
+  }catch(e){e;}
 }
 
 class MyApp extends StatelessWidget {

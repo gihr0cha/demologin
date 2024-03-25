@@ -39,18 +39,15 @@ void validateAndSubmit() async{
 } on FirebaseAuthException catch (e) { 
   if (e.code == 'weak-password') {
     erroMessage = 'A senha fornecida é muito fraca';
-    print('The password provided is too weak.');
   } else if (e.code == 'email-already-in-use') {
     erroMessage = 'Esse e-mail já está em uso';
-    print('The account already exists for that email.');
   } else{
     erroMessage = 'Erro desconhecido';
-    print('Error: $e');
   }
   mensagem(context,erroMessage);
   
 } catch (e) {
-  print(e);
+  erroMessage = 'Erro desconhecido';
 }
     }
 }
