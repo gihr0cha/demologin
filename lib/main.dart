@@ -4,6 +4,7 @@ import 'registerfisio_page.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'home_page.dart';
+import 'registrodb.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   try{
@@ -25,11 +26,13 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      initialRoute: '/',
+      initialRoute: '/login',
       routes: {
-        '/': (context) => const LoginPage(),
+        '/': (context) => const RegistroDB(),
+        '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterFisio(),
         '/home': (context) => const HomePage(),
+        '/banco': (context) => const RegistroDB(),
       },   
     );
   }
