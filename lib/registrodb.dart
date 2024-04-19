@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,14 +10,14 @@ class RegistroDB extends StatefulWidget {
   State<RegistroDB> createState() => _RegistroDBState();
 }
 
-class _RegistroDBState extends State<RegistroDB>
-    with SingleTickerProviderStateMixin {
+class _RegistroDBState extends State<RegistroDB>{
   final user = FirebaseAuth.instance.currentUser;
   final _formKey = GlobalKey<FormState>();
+  // final firebaseApp = 
+  final rtdb = FirebaseDatabase.instanceFor(app: Firebase.app(), databaseURL: 'https://fir-6a5e9-default-rtdb.firebaseio.com');
 
   FirebaseDatabase database = FirebaseDatabase.instance;
   String? _nomepaciente;
-  late AnimationController _controller;
 
   bool validateAndSave() {
     final form = _formKey.currentState;
@@ -37,18 +38,6 @@ class _RegistroDBState extends State<RegistroDB>
       });
       print(database);
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 
   @override

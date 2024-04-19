@@ -11,7 +11,8 @@ void main() async{
    await Firebase.initializeApp( 
       options: DefaultFirebaseOptions.currentPlatform);
     runApp(const MyApp()); 
-  }catch(e){e;}
+  }catch(e){e;
+    print('Error initializing Firebase: $e');}
 }
 
 class MyApp extends StatelessWidget {
