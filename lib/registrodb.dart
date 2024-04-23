@@ -10,11 +10,13 @@ class RegistroDB extends StatefulWidget {
   State<RegistroDB> createState() => _RegistroDBState();
 }
 
-class _RegistroDBState extends State<RegistroDB>{
+class _RegistroDBState extends State<RegistroDB> {
   final user = FirebaseAuth.instance.currentUser;
   final _formKey = GlobalKey<FormState>();
-  // final firebaseApp = 
-  final rtdb = FirebaseDatabase.instanceFor(app: Firebase.app(), databaseURL: 'https://fir-6a5e9-default-rtdb.firebaseio.com');
+  // final firebaseApp =
+  final rtdb = FirebaseDatabase.instanceFor(
+      app: Firebase.app(),
+      databaseURL: 'https://fir-6a5e9-default-rtdb.firebaseio.com');
 
   FirebaseDatabase database = FirebaseDatabase.instance;
   String? _nomepaciente;
@@ -34,7 +36,7 @@ class _RegistroDBState extends State<RegistroDB>{
     if (validateAndSave()) {
       database.ref().child('pacientes').push().set({
         'nome': _nomepaciente,
-        'fisio': user?.uid,
+        'fisio': user?.displayName,
       });
       print(database);
     }
@@ -43,7 +45,7 @@ class _RegistroDBState extends State<RegistroDB>{
   @override
   Widget build(BuildContext context) {
     final nome = user?.displayName ?? '';
-    
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Bem-vindo $nome'),
