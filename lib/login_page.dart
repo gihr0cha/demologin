@@ -30,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
       if (validateAndSave()) {
         UserCredential user = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: _email!, password: _password!);
-        Navigator.pushNamed(context, '/banco');
+        Navigator.pushNamed(context, '/home');
       }
     } catch (e) {
       if (e is FirebaseAuthException) {

@@ -13,7 +13,7 @@ class RegistroDB extends StatefulWidget {
 class _RegistroDBState extends State<RegistroDB> {
   final user = FirebaseAuth.instance.currentUser;
   final _formKey = GlobalKey<FormState>();
-  // final firebaseApp =
+
   final rtdb = FirebaseDatabase.instanceFor(
       app: Firebase.app(),
       databaseURL: 'https://fir-6a5e9-default-rtdb.firebaseio.com');
@@ -35,9 +35,9 @@ class _RegistroDBState extends State<RegistroDB> {
   void validateAndSubmit() {
     if (validateAndSave()) {
       database.ref().child('pacientes').push().set({
-        'nome': _nomepaciente,
         'fisio': user?.displayName,
-      });
+        'nome': _nomepaciente,
+      }); 
       print(database);
     }
   }
