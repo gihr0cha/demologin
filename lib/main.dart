@@ -1,3 +1,4 @@
+import 'package:demologin/formSessao.dart';
 import 'package:flutter/material.dart';
 import 'login_page.dart';
 import 'registerfisio_page.dart';
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
         useMaterial3: true,
       ),
       initialRoute: '/login',
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
         '/register': (context) => const RegisterFisio(),
         '/home': (context) => const HomePage(),
         '/banco': (context) => const RegistroDB(),
+        '/form': (context) => FormsSessao()
       },   
     );
   }

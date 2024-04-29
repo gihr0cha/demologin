@@ -1,9 +1,9 @@
+import 'package:demologin/formSessao.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'sessao_widget.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,18 +14,19 @@ class HomePage extends StatelessWidget {
         title: Text('Bem-vindo, $nome'),
       ),
       body: Center(
-        child: ElevatedButton(
-          child: Text('Iniciar sessão'),
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return MyDialog();
-              },
-            );
-          },
-        ),
+         child: ElevatedButton(
+          onPressed: () => entrar(context),
+          child: Text('Enter'),
+          ),
       ),
+    );
+  }
+
+  void entrar(BuildContext context) {
+    // Navigate to FormsSessao
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => FormsSessao()),
     );
   }
 }
