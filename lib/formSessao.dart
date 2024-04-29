@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class FormsSessao extends StatefulWidget {
   FormsSessao({super.key});
@@ -8,13 +11,50 @@ class FormsSessao extends StatefulWidget {
 }
 
 class _FormsSessaoState extends State<FormsSessao> {
+  final user = FirebaseAuth.instance.currentUser;
+  final rtdb = FirebaseDatabase.instanceFor(
+      app: Firebase.app(),
+      databaseURL: 'https://fir-6a5e9-default-rtdb.firebaseio.com');
+
+  FirebaseDatabase database = FirebaseDatabase.instance;
   final _formKey = GlobalKey<FormState>();
   final _controller = PageController();
+
   final _fields = [
-    {'label': 'Frequência Cardíaca Inicial', 'validator': 'Por favor, insira a frequência cardíaca inicial'},
-    {'label': 'SpO2', 'validator': 'Por favor, insira o SpO2'},
-    {'label': 'PA', 'validator': 'Por favor, insira a PA'},
+    {
+      'label': 'Frequência Cardíaca',
+      'validator': 'Por favor, insira a frequência cardíaca inicial'
+    },
+    {'label': 'SpO2', 'validator': 'Por favor, insira o SpO2 inicial'},
+    {'label': 'PA', 'validator': 'Por favor, insira a PA inicial'},
+    {'label': 'PSE', 'validator': 'Por favor, insira a PSE inicial'},
+    {
+      'label': 'Dor Torácica',
+      'validator': 'Por favor, insira a dor torácica inicial'
+    },
   ];
+
+  String? freqCardiacaInicial;
+  String? spo2Inicial;
+  String? paInicial;
+  String? pseInicial;
+  String? dorToracicaInicial;
+
+  bool validateAndSave() {
+    final form = _formKey.currentState;
+    if (form!.validate()) {
+      form.save();
+      print(freqCardiacaInicial);
+      print(spo2Inicial);
+      print(pseInicial);
+      print(dorToracicaInicial);
+      return true;
+    }
+    else{
+      print('não salvou');
+      return false;
+      }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +72,35 @@ class _FormsSessaoState extends State<FormsSessao> {
               padding: EdgeInsets.all(8.0),
               child: AlertDialog(
                 content: TextFormField(
-                  decoration: InputDecoration(labelText: _fields[index]['label']),
+                  decoration:
+                      InputDecoration(labelText: _fields[index]['label']),
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return _fields[index]['validator'];
                     }
                     return null;
+                  },
+                  onChanged: (value) {
+                    setState(() {
+                      switch (index) {
+                        case 0:
+                          freqCardiacaInicial = value;
+                          break;
+                        case 1:
+                          spo2Inicial = value;
+                          break;
+                        case 2:
+                          paInicial = value;
+                          break;
+                        case 3:
+                          pseInicial = value;
+                          break;
+                        case 4:
+                          dorToracicaInicial = value;
+                          break;
+                      }
+                    });
                   },
                 ),
                 actions: [
@@ -54,6 +116,7 @@ class _FormsSessaoState extends State<FormsSessao> {
                     ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
+                          
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text('Processando Dados')),
                           );
