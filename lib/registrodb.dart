@@ -8,6 +8,7 @@ class RegistroDB extends StatefulWidget {
 
   @override
   State<RegistroDB> createState() => _RegistroDBState();
+  
 }
 
 class _RegistroDBState extends State<RegistroDB> {
@@ -20,6 +21,7 @@ class _RegistroDBState extends State<RegistroDB> {
 
   FirebaseDatabase database = FirebaseDatabase.instance;
   String? _nomepaciente;
+  
 
   bool validateAndSave() {
     final form = _formKey.currentState;
@@ -45,6 +47,7 @@ class _RegistroDBState extends State<RegistroDB> {
   @override
   Widget build(BuildContext context) {
     final nome = user?.displayName ?? '';
+    
 
     return Scaffold(
       appBar: AppBar(

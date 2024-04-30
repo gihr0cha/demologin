@@ -4,21 +4,23 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 class FormsSessao extends StatefulWidget {
-  FormsSessao({super.key});
+  const FormsSessao({super.key});
 
   @override
   _FormsSessaoState createState() => _FormsSessaoState();
+ 
 }
 
 class _FormsSessaoState extends State<FormsSessao> {
-  final user = FirebaseAuth.instance.currentUser;
-  final rtdb = FirebaseDatabase.instanceFor(
+final user = FirebaseAuth.instance.currentUser;
+final rtdb = FirebaseDatabase.instanceFor(
       app: Firebase.app(),
       databaseURL: 'https://fir-6a5e9-default-rtdb.firebaseio.com');
 
   FirebaseDatabase database = FirebaseDatabase.instance;
   final _formKey = GlobalKey<FormState>();
   final _controller = PageController();
+  
 
   final _fields = [
     {
@@ -34,20 +36,24 @@ class _FormsSessaoState extends State<FormsSessao> {
     },
   ];
 
-  String? freqCardiacaInicial;
-  String? spo2Inicial;
-  String? paInicial;
-  String? pseInicial;
-  String? dorToracicaInicial;
+  
+  String? _nomepaciente;
+  Map<String, dynamic> healthParameters = {
+  'freqCardiacaInicial': null,
+  'spo2Inicial': null,
+  'paInicial': null,
+  'pseInicial': null,
+  'dorToracicaInicial': null,
+};
+
+
+
 
   bool validateAndSave() {
     final form = _formKey.currentState;
     if (form!.validate()) {
       form.save();
-      print(freqCardiacaInicial);
-      print(spo2Inicial);
-      print(pseInicial);
-      print(dorToracicaInicial);
+      print(healthParameters);
       return true;
     }
     else{
@@ -56,6 +62,16 @@ class _FormsSessaoState extends State<FormsSessao> {
       }
   }
 
+void validateAndSubmit() {
+    if (validateAndSave()) {
+      database.ref().child('pacientes').push().set({
+        'fisio': user?.displayName,
+        'nome': _nomepaciente,
+        'dados': healthParameters
+      }); 
+      print(database);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,19 +101,19 @@ class _FormsSessaoState extends State<FormsSessao> {
                     setState(() {
                       switch (index) {
                         case 0:
-                          freqCardiacaInicial = value;
+                          healthParameters['freqCardiacaInicial'] = value;
                           break;
                         case 1:
-                          spo2Inicial = value;
+                          healthParameters['spo2Inicial'] = value;
                           break;
                         case 2:
-                          paInicial = value;
+                          healthParameters['paInicial'] = value;
                           break;
                         case 3:
-                          pseInicial = value;
+                          healthParameters['pseInicial'] = value;
                           break;
                         case 4:
-                          dorToracicaInicial = value;
+                          healthParameters['dorToracicaInicial'] = value;
                           break;
                       }
                     });

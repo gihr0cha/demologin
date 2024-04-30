@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
         '/register': (context) => const RegisterFisio(),
         '/home': (context) => const HomePage(),
         '/banco': (context) => const RegistroDB(),
-        '/form': (context) => FormsSessao()
+        '/form': (context) => const FormsSessao()
       },   
     );
   }
