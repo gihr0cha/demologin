@@ -66,10 +66,10 @@ class _PacientePageState extends State<PacientePage> {
         child: const Icon(Icons.add),
       ),
       body: StreamBuilder(
-        stream: database.ref().child(fisio).onValue,
+        stream: database.ref().child('pacientes').onValue,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData && snapshot.data?.snapshot.value != null) {
-            Map<dynamic, dynamic>map = snapshot.data?.snapshot.value;
+            Map<dynamic, dynamic>map = snapshot.data.value;
             map = map.cast<String, dynamic>();
 
             return ListView.builder(
@@ -79,7 +79,7 @@ class _PacientePageState extends State<PacientePage> {
                   var outerData = map.values.toList()[index];
                   var innerData = outerData.values.toList()[0];
                   String nome = innerData['nome'] ?? 'Sem nome';
-                  String email = innerData['email'] ?? 'Sem email';
+                  //String email = innerData['email'] ?? 'Sem email';
                   return InkWell(
                     onTap: () {
                       Navigator.push(
@@ -89,7 +89,7 @@ class _PacientePageState extends State<PacientePage> {
                     },
                     child: ListTile(
                       title: Text(nome),
-                      subtitle: Text(email),
+                      //subtitle: Text(email),
                     ),
                   );
                 } catch (e) {
