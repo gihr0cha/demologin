@@ -6,6 +6,7 @@ import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'home_page.dart';
 import 'registrodb.dart';
+import 'listaPacientes.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   try{
@@ -35,7 +36,8 @@ class MyApp extends StatelessWidget {
         '/register': (context) => const RegisterFisio(),
         '/home': (context) => const HomePage(),
         '/banco': (context) => const RegistroDB(),
-        '/form': (context) => const FormsSessao()
+        '/form': (context) => const FormsSessao(),
+        '/paciente': (context) => const PacientePage()
       },   
     );
   }

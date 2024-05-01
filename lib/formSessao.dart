@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 class FormsSessao extends StatefulWidget {
   const FormsSessao({super.key});
+  
 
   @override
   _FormsSessaoState createState() => _FormsSessaoState();
@@ -132,6 +133,7 @@ void validateAndSubmit() {
                     ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
+                          validateAndSave();
                           
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text('Processando Dados')),

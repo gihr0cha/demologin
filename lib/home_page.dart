@@ -1,4 +1,4 @@
-import 'package:demologin/formSessao.dart';
+import 'package:demologin/listaPacientes.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -26,7 +26,7 @@ class HomePage extends StatelessWidget {
     // Navigate to FormsSessao
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => FormsSessao()),
+      MaterialPageRoute(builder: (context) => const PacientePage()),
     );
   }
 }
