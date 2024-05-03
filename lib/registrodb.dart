@@ -7,11 +7,11 @@ class RegistroDB extends StatefulWidget {
   const RegistroDB({super.key});
 
   @override
-  State<RegistroDB> createState() => _RegistroDBState();
+  State<RegistroDB> createState() => RegistroDBState();
   
 }
 
-class _RegistroDBState extends State<RegistroDB> {
+class RegistroDBState extends State<RegistroDB> {
   final user = FirebaseAuth.instance.currentUser;
   final _formKey = GlobalKey<FormState>();
 
@@ -20,14 +20,16 @@ class _RegistroDBState extends State<RegistroDB> {
       databaseURL: 'https://fir-6a5e9-default-rtdb.firebaseio.com');
 
   FirebaseDatabase database = FirebaseDatabase.instance;
-  String? _nomepaciente;
+  String? nomepaciente;
+  String? emailpaciente;
   
 
   bool validateAndSave() {
     final form = _formKey.currentState;
     if (form!.validate()) {
       form.save();
-      print(_nomepaciente);
+      print(nomepaciente);
+      print(emailpaciente);
       return true;
     } else {
       return false;
@@ -36,11 +38,13 @@ class _RegistroDBState extends State<RegistroDB> {
 
   void validateAndSubmit() {
     if (validateAndSave()) {
-      database.ref().child('pacientes').push().set({
+      database.ref().child('cadastrados').push().set({
         'fisio': user?.displayName,
-        'nome': _nomepaciente,
-      }); 
-      print(database);
+        'paciente': {nomepaciente: nomepaciente, emailpaciente: emailpaciente}
+      }
+      ); 
+    print(database);
+
     }
   }
 
@@ -63,7 +67,14 @@ class _RegistroDBState extends State<RegistroDB> {
                 hintText: 'Nome do Paciente',
               ),
               validator: (value) => value!.isEmpty ? 'inválido' : null,
-              onSaved: (newValue) => _nomepaciente = newValue,
+              onSaved: (newValue) => nomepaciente = newValue,
+            ),
+             TextFormField(
+              decoration: const InputDecoration(
+                hintText: 'email',
+              ),
+              validator: (value) => value!.isEmpty ? 'inválido' : null,
+              onSaved: (newValue) => emailpaciente = newValue,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),

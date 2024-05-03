@@ -1,26 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'registrodb.dart';
 
 class FormsSessao extends StatefulWidget {
-  const FormsSessao({super.key});
-  
+  final dynamic paciente;
+  const FormsSessao({Key? key, required this.paciente}) : super(key: key);
 
   @override
   _FormsSessaoState createState() => _FormsSessaoState();
- 
 }
-
 class _FormsSessaoState extends State<FormsSessao> {
 final user = FirebaseAuth.instance.currentUser;
-final rtdb = FirebaseDatabase.instanceFor(
-      app: Firebase.app(),
-      databaseURL: 'https://fir-6a5e9-default-rtdb.firebaseio.com');
-
-  FirebaseDatabase database = FirebaseDatabase.instance;
+FirebaseDatabase database = FirebaseDatabase.instance;
   final _formKey = GlobalKey<FormState>();
   final _controller = PageController();
+  
+
   
 
   final _fields = [
