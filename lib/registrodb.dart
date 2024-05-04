@@ -21,7 +21,8 @@ class RegistroDBState extends State<RegistroDB> {
 
   FirebaseDatabase database = FirebaseDatabase.instance;
   String? nomepaciente;
-  String? emailpaciente;
+  String? datanascimentopaciente;
+  String fisio = 'fisioterapeutas/${FirebaseAuth.instance.currentUser?.displayName}';
   
 
   bool validateAndSave() {
@@ -29,7 +30,7 @@ class RegistroDBState extends State<RegistroDB> {
     if (form!.validate()) {
       form.save();
       print(nomepaciente);
-      print(emailpaciente);
+      print(datanascimentopaciente);
       return true;
     } else {
       return false;
@@ -38,9 +39,8 @@ class RegistroDBState extends State<RegistroDB> {
 
   void validateAndSubmit() {
     if (validateAndSave()) {
-      database.ref().child('cadastrados').push().set({
-        'fisio': user?.displayName,
-        'paciente': {nomepaciente: nomepaciente, emailpaciente: emailpaciente}
+      database.ref().child(fisio).push().set({
+        'pacientes': {'nomepaciente': nomepaciente, 'datanascimento': datanascimentopaciente}
       }
       ); 
     print(database);
@@ -71,10 +71,10 @@ class RegistroDBState extends State<RegistroDB> {
             ),
              TextFormField(
               decoration: const InputDecoration(
-                hintText: 'email',
+                hintText: 'data de nascimento',
               ),
               validator: (value) => value!.isEmpty ? 'inválido' : null,
-              onSaved: (newValue) => emailpaciente = newValue,
+              onSaved: (newValue) => datanascimentopaciente = newValue,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
