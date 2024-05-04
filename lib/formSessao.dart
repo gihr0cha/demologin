@@ -1,22 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'registrodb.dart';
 
 class FormsSessao extends StatefulWidget {
-  final dynamic paciente;
+  final dynamic paciente ;
   const FormsSessao({Key? key, required this.paciente}) : super(key: key);
+
 
   @override
   _FormsSessaoState createState() => _FormsSessaoState();
+  
 }
 class _FormsSessaoState extends State<FormsSessao> {
 final user = FirebaseAuth.instance.currentUser;
 FirebaseDatabase database = FirebaseDatabase.instance;
   final _formKey = GlobalKey<FormState>();
   final _controller = PageController();
-  
+  dynamic paciente;
 
+  @override
+  void initState() {
+    super.initState();
+    paciente = widget.paciente;
+  }
+  
   
 
   final _fields = [
@@ -34,7 +41,6 @@ FirebaseDatabase database = FirebaseDatabase.instance;
   ];
 
   
-  String? _nomepaciente;
   Map<String, dynamic> healthParameters = {
   'freqCardiacaInicial': null,
   'spo2Inicial': null,
@@ -51,6 +57,7 @@ FirebaseDatabase database = FirebaseDatabase.instance;
     if (form!.validate()) {
       form.save();
       print(healthParameters);
+      print(paciente);
       return true;
     }
     else{
@@ -61,10 +68,9 @@ FirebaseDatabase database = FirebaseDatabase.instance;
 
 void validateAndSubmit() {
     if (validateAndSave()) {
-      database.ref().child('pacientes').push().set({
-        'fisio': user?.displayName,
-        'nome': _nomepaciente,
-        'dados': healthParameters
+      database.ref().child(paciente).push().set({
+        'sessionDate': DateTime.now().toString(),
+        'healthParameters': healthParameters
       }); 
       print(database);
     }
@@ -73,7 +79,7 @@ void validateAndSubmit() {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Formulário de Saúde'),
+        title: Text('Formulário de Saúde: $paciente'),
       ),
       body: Form(
         key: _formKey,
@@ -82,7 +88,7 @@ void validateAndSubmit() {
           itemCount: _fields.length,
           itemBuilder: (context, index) {
             return Padding(
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
               child: AlertDialog(
                 content: TextFormField(
                   decoration:
@@ -128,6 +134,7 @@ void validateAndSubmit() {
                   if (index == _fields.length - 1)
                     ElevatedButton(
                       onPressed: () {
+                        print(paciente);
                         if (_formKey.currentState!.validate()) {
                           validateAndSave();
                           
