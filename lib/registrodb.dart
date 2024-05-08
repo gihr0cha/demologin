@@ -37,16 +37,27 @@ class RegistroDBState extends State<RegistroDB> {
     }
   }
 
-  void validateAndSubmit() {
-    if (validateAndSave()) {
-      database.ref().child(fisio).push().set({
-        'pacientes': {'nomepaciente': nomepaciente, 'datanascimento': datanascimentopaciente}
-      }
-      ); 
-    print(database);
+  void validateAndSubmit() async {
+  if (validateAndSave()) {
+    // Cria um novo nó para o paciente sob 'pacientes'
+    DatabaseReference dbRef = FirebaseDatabase.instance.ref();
+    DatabaseReference newPatientRef = dbRef.child('pacientes').push();
 
-    }
+    await newPatientRef.set({
+      'nome': nomepaciente,
+      'data_nascimento': datanascimentopaciente,
+      'sessoes': {}  // Inicialmente, o paciente não tem sessões associadas
+    });
+
+    // Adiciona o ID do paciente à lista de pacientes do fisioterapeuta
+    String fisioId = FirebaseAuth.instance.currentUser!.uid;
+    dbRef.child('fisioterapeutas').child(fisioId).child('pacientes').update({
+      newPatientRef.key!: true
+    });
+
+    print(database);
   }
+}
 
   @override
   Widget build(BuildContext context) {

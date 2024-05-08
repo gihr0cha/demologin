@@ -8,10 +8,10 @@ class FormsSessao extends StatefulWidget {
 
 
   @override
-  _FormsSessaoState createState() => _FormsSessaoState();
+  FormsSessaoState createState() => FormsSessaoState();
   
 }
-class _FormsSessaoState extends State<FormsSessao> {
+class FormsSessaoState extends State<FormsSessao> {
 final user = FirebaseAuth.instance.currentUser;
 FirebaseDatabase database = FirebaseDatabase.instance;
   final _formKey = GlobalKey<FormState>();
@@ -26,7 +26,7 @@ FirebaseDatabase database = FirebaseDatabase.instance;
   
   
 
-  final _fields = [
+  final _fieldsinicial = [
     {
       'label': 'Frequência Cardíaca',
       'validator': 'Por favor, insira a frequência cardíaca inicial'
@@ -40,13 +40,35 @@ FirebaseDatabase database = FirebaseDatabase.instance;
     },
   ];
 
+  final _fieldsfinal = [
+    {
+      'label': 'Frequência Cardíaca',
+      'validator': 'Por favor, insira a frequência cardíaca final'
+    },
+    {'label': 'SpO2', 'validator': 'Por favor, insira o SpO2 final'},
+    {'label': 'PA', 'validator': 'Por favor, insira a PA final'},
+    {'label': 'PSE', 'validator': 'Por favor, insira a PSE final'},
+    {
+      'label': 'Dor Torácica',
+      'validator': 'Por favor, insira a dor torácica final'
+    },
+  ];
+
   
-  Map<String, dynamic> healthParameters = {
+  Map<String, dynamic> healthParametersinicial = {
   'freqCardiacaInicial': null,
   'spo2Inicial': null,
   'paInicial': null,
   'pseInicial': null,
   'dorToracicaInicial': null,
+};
+
+Map<String, dynamic> healthParametersfinal = {
+  'freqCardiacaFianl': null,
+  'spo2Final': null,
+  'paFinal': null,
+  'pseFinal': null,
+  'dorToracicaFinal': null,
 };
 
 
@@ -56,8 +78,7 @@ FirebaseDatabase database = FirebaseDatabase.instance;
     final form = _formKey.currentState;
     if (form!.validate()) {
       form.save();
-      print(healthParameters);
-      print(paciente);
+      print(healthParametersinicial);
       return true;
     }
     else{
@@ -67,36 +88,49 @@ FirebaseDatabase database = FirebaseDatabase.instance;
   }
 
 void validateAndSubmit() {
-    if (validateAndSave()) {
-      database.ref().child(paciente).push().set({
-        'sessionDate': DateTime.now().toString(),
-        'healthParameters': healthParameters
-      }); 
-      print(database);
-    }
+  if (validateAndSave()) {
+    // Cria um novo nó para a sessão sob 'sessoes'
+    DatabaseReference dbRef = FirebaseDatabase.instance.ref();
+    DatabaseReference newSessionRef = dbRef.child('sessoes').push();
+
+    newSessionRef.set({
+      'inicio_sessao': healthParametersinicial,
+      'exercicios': {},
+      'fim_sessao':{},
+        // Inicialmente, a sessão não tem exercícios associados
+      // Você pode adicionar outros campos aqui conforme necessário
+    });
+
+    // Adiciona o ID da sessão à lista de sessões do paciente
+    dbRef.child('pacientes').child(paciente).child('sessoes').update({
+      newSessionRef.key!: true
+    });
+
+    print(database);
   }
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Formulário de Saúde: $paciente'),
+        title: Text('Formulário de Saúde: ${widget.paciente['nome']}'),
       ),
       body: Form(
         key: _formKey,
         child: PageView.builder(
           controller: _controller,
-          itemCount: _fields.length,
+          itemCount: _fieldsinicial.length,
           itemBuilder: (context, index) {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: AlertDialog(
                 content: TextFormField(
                   decoration:
-                      InputDecoration(labelText: _fields[index]['label']),
+                      InputDecoration(labelText: _fieldsinicial[index]['label']),
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return _fields[index]['validator'];
+                      return _fieldsinicial[index]['validator'];
                     }
                     return null;
                   },
@@ -104,34 +138,34 @@ void validateAndSubmit() {
                     setState(() {
                       switch (index) {
                         case 0:
-                          healthParameters['freqCardiacaInicial'] = value;
+                          healthParametersinicial['freqCardiacaInicial'] = value;
                           break;
                         case 1:
-                          healthParameters['spo2Inicial'] = value;
+                          healthParametersinicial['spo2Inicial'] = value;
                           break;
                         case 2:
-                          healthParameters['paInicial'] = value;
+                          healthParametersinicial['paInicial'] = value;
                           break;
                         case 3:
-                          healthParameters['pseInicial'] = value;
+                          healthParametersinicial['pseInicial'] = value;
                           break;
                         case 4:
-                          healthParameters['dorToracicaInicial'] = value;
+                          healthParametersinicial['dorToracicaInicial'] = value;
                           break;
                       }
                     });
                   },
                 ),
                 actions: [
-                  if (index < _fields.length - 1)
+                  if (index < _fieldsinicial.length - 1)
                     ElevatedButton(
                       onPressed: () => _controller.nextPage(
-                        duration: Duration(milliseconds: 300),
+                        duration: const Duration(milliseconds: 300),
                         curve: Curves.easeIn,
                       ),
-                      child: Text('Next'),
+                      child: const Text('Next'),
                     ),
-                  if (index == _fields.length - 1)
+                  if (index == _fieldsinicial.length - 1)
                     ElevatedButton(
                       onPressed: () {
                         print(paciente);
@@ -139,11 +173,11 @@ void validateAndSubmit() {
                           validateAndSave();
                           
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Processando Dados')),
+                            const SnackBar(content: Text('Processando Dados')),
                           );
                         }
                       },
-                      child: Text('Enviar'),
+                      child: const Text('Enviar'),
                     ),
                 ],
               ),

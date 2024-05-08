@@ -62,7 +62,7 @@ class _PacientePageState extends State<PacientePage> {
           child: const Icon(Icons.add),
         ),
         body: StreamBuilder(
-            stream: database.ref().child(fisio).onValue,
+            stream: database.ref().child('pacientes').onValue,
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               print(database.ref().child('pacientes').onValue);
               print(snapshot);
@@ -78,10 +78,9 @@ class _PacientePageState extends State<PacientePage> {
                   itemCount: formattedMap.length,
                   itemBuilder: (context, index) {
                     try {
-                      var outerData = formattedMap.values.toList()[index];
-                      var patientData = outerData['pacientes'];
-                      String nome = patientData['nomepaciente'];
-                      String dataNascimento = patientData['datanascimento'];
+                      var patientData = formattedMap.values.toList()[index];
+                      String nome = patientData['nome'];
+                      String dataNascimento = patientData['data_nascimento'];
                       return InkWell(
                         onTap: () {
                           Navigator.push(
@@ -105,7 +104,7 @@ class _PacientePageState extends State<PacientePage> {
                   },
                 );
               } else {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               }
             }));
   }
