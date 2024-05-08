@@ -93,16 +93,14 @@ void validateAndSubmit() {
     DatabaseReference dbRef = FirebaseDatabase.instance.ref();
     DatabaseReference newSessionRef = dbRef.child('sessoes').push();
 
-    newSessionRef.set({
+   newSessionRef.set({
+      'sessoes':{
       'inicio_sessao': healthParametersinicial,
-      'exercicios': {},
-      'fim_sessao':{},
-        // Inicialmente, a sessão não tem exercícios associados
-      // Você pode adicionar outros campos aqui conforme necessário
-    });
+      'fim_sessao': {},
+    }});
 
     // Adiciona o ID da sessão à lista de sessões do paciente
-    dbRef.child('pacientes').child(paciente).child('sessoes').update({
+    dbRef.child('pacientes').child(widget.paciente).child('sessoes').update({
       newSessionRef.key!: true
     });
 
@@ -170,7 +168,7 @@ void validateAndSubmit() {
                       onPressed: () {
                         print(paciente);
                         if (_formKey.currentState!.validate()) {
-                          validateAndSave();
+                          validateAndSubmit();
                           
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Processando Dados')),
